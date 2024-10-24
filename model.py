@@ -59,18 +59,6 @@ def create_cnn_model_pro(input_shape, l1=0.001, l2=0.001):
     x = Dropout(0.5)(x)
     outputs = Dense(32, activation='relu', kernel_regularizer=l1_l2(l1, l2))(x)
 
-    # x = Dense(128, activation='relu')(outputs)
-    # x = Dropout(0.5)(x)
-    # x = Dense(64, activation='relu')(x)
-    # x = Dropout(0.5)(x)
-    # x = Dense(32, activation='relu')(x)
-    # x = Dropout(0.5)(x)
-    # x = Dense(16, activation='relu')(x)
-
-    # outputs = Dense(1, activation='sigmoid')(x)
-
-
-
     model = Model(inputs=inputs, outputs=outputs)
     return model
 
