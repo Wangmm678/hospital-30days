@@ -61,29 +61,3 @@ def create_cnn_model_pro(input_shape, l1=0.001, l2=0.001):
 
     model = Model(inputs=inputs, outputs=outputs)
     return model
-
-
-def create_combined_model(transformer_input_dim, cnn_input_shape):
-    transformer_model = create_transformer_model(transformer_input_dim)
-    cnn_model = create_cnn_model_pro(cnn_input_shape)
-
-    transformer_input = Input(shape=(transformer_input_dim,))
-    cnn_input = Input(shape=cnn_input_shape)
-
-    transformer_output = transformer_model(transformer_input)
-    cnn_output = cnn_model(cnn_input)
-
-    combined_output = concatenate([transformer_output, cnn_output])
-
-    x = Dense(128, activation='relu')(combined_output)
-    x = Dropout(0.5)(x)
-    x = Dense(64, activation='relu')(x)
-    x = Dropout(0.5)(x)
-    x = Dense(32, activation='relu')(x)
-    x = Dropout(0.5)(x)
-    x = Dense(16, activation='relu')(x)
-
-    outputs = Dense(1, activation='sigmoid')(x)
-
-    combined_model = Model(inputs=[transformer_input, cnn_input], outputs=outputs)
-    return combined_model
