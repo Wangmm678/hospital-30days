@@ -6,28 +6,6 @@ from keras.regularizers import l1_l2
 from keras import regularizers
 
 
-class TransformerLayer(Layer):
-    def __init__(self, units, num_heads):
-        super(TransformerLayer, self).__init__()
-        self.units = units
-        self.num_heads = num_heads
-
-    def build(self, input_shape):
-        self.embedding = Dense(self.units)
-        self.attention = MultiHeadAttention(num_heads=self.num_heads, key_dim=self.units // self.num_heads)
-        self.layer_norm1 = LayerNormalization()
-        self.dense1 = Dense(self.units, activation='relu')
-        self.dense2 = Dense(input_shape[-1])
-        self.layer_norm2 = LayerNormalization()
-        super(TransformerLayer, self).build(input_shape)
-
-    def call(self, inputs):
-        attn_output = self.attention(inputs, inputs)
-        attn_output = self.layer_norm1(inputs + attn_output)
-        ffn_output = self.dense2(self.dense1(attn_output))
-        return self.layer_norm2(attn_output + ffn_output)
-
-
 def create_transformer_model(input_dim, l2_reg=0.001):
     inputs = Input(shape=(input_dim,))
     x = Dense(256, activation='relu', kernel_regularizer=l1_l2(0.001))(inputs)
